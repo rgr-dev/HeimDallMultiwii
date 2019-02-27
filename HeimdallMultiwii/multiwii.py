@@ -68,7 +68,7 @@ class MultiWii:
             # self.logger.info("Connecting with board on port: " + self.serial.port)
             print("Connecting with board on port: " + self.serial.port)
             for i in range(1, wait):
-                self.logger.info(wait - i)
+                # self.logger.info(wait - i)
                 sleep(1)
         except Exception as error:
             # self.logger.warning("Error opening " + self.serial.port + " port. " + str(error))
