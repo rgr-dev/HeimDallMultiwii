@@ -20,7 +20,8 @@ pip install -i https://test.pypi.org/simple/ HeimdallMultiwii
 from HeimdallMultiwii import
 
 droneFCB = comm.Adapter('/dev/ttyUSB0') #  default baudrate 115200
-droneFCB = comm.Adapter('/dev/ttyUSB0', baud_rate=56000) # your custom baudrate
+# OR your custom baudrate                           vvvvv
+# droneFCB = comm.Adapter('/dev/ttyUSB0', baud_rate=56000)
 droneFCB.connect()
 if droneFCB.can_fly():
     print(droneFCB.get_ident())
@@ -41,6 +42,14 @@ then LogOff or Reboot.
 ----
 
 The package is in active development and you can find it in the Pypi test site. Comming soon in real Pypi
+
+####Pending:
++ Multiwii MSP
+    * Map all MSP MultiWii FCB responses
+    * Send RC commands to FCB
++ Misc
+    * Make it ThreadSafe
+
 
 HeimdallMultiwii package test index [HeimdallMultiwii](https://test.pypi.org/project/HeimdallMultiwii/). 
 
