@@ -19,7 +19,8 @@ pip install -i https://test.pypi.org/simple/ HeimdallMultiwii
 #!/usr/bin/env python3
 from HeimdallMultiwii import
 
-droneFCB = comm.Adapter('/dev/ttyUSB0')
+droneFCB = comm.Adapter('/dev/ttyUSB0') #  default baudrate 115200
+droneFCB = comm.Adapter('/dev/ttyUSB0', baud_rate=56000) # your custom baudrate
 droneFCB.connect()
 if droneFCB.can_fly():
     print(droneFCB.get_ident())

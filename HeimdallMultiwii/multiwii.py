@@ -36,7 +36,7 @@ class MultiWii:
         if self.serial.isOpen():
             self.close_connection()
 
-    def open_connection(self, serport=None):
+    def open_connection(self, baud_rate, serport=None):
         """Setup and open serial communication with FCB
 
         :param serport: Serial port for multiwii connection
@@ -47,7 +47,7 @@ class MultiWii:
         if serport is None:
             raise Exception("Please provide a Serial Port...")
         self.serial.port = serport
-        self.serial.baudrate = 115200
+        self.serial.baudrate = baud_rate
         self.serial.bytesize = pyserial.EIGHTBITS
         self.serial.parity = pyserial.PARITY_NONE
         self.serial.stopbits = pyserial.STOPBITS_ONE

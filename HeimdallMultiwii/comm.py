@@ -15,13 +15,14 @@ __status__ = "Development"
 
 class Adapter:
 
-    def __init__(self, port):
+    def __init__(self, port, baudrate=115200):
         self.flightcontrolboard = MultiWii()
         self._port = port
+        self._baudrate = baudrate
         self._is_on = False
 
     def connect(self):
-        if not self.flightcontrolboard.open_connection(self._port):
+        if not self.flightcontrolboard.open_connection(self._baudrate, self._port):
             raise WrongPortError("Can not connect with this port try another one...")
         else:
             self._is_on = True
