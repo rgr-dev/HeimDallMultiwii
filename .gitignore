@@ -114,3 +114,8 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# JetBrains Files
+.idea/
+
+test.py
