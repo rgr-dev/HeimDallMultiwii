@@ -7,8 +7,9 @@ import struct
 
 import logging
 
-from HeimdallMultiwii_package.HeimdallMultiwii.constants import CTYPE_PATTERNS
-from HeimdallMultiwii_package.HeimdallMultiwii.exeptions import MissingCodeError
+from HeimdallMultiwii.constants import CTYPE_PATTERNS
+from HeimdallMultiwii.exeptions import MissingCodeError
+
 
 class MultiWii:
     """
@@ -28,8 +29,8 @@ class MultiWii:
     """
 
     def __init__(self) -> None:
-        # self.logger = logging.getLogger('simpleExample')
         self.serial = pyserial.Serial()
+        # self.logger = logging.getLogger('simpleExample')
 
     def __del__(self):
         if self.serial.isOpen():

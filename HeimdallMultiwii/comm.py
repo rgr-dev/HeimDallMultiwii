@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-from HeimdallMultiwii_package.HeimdallMultiwii.exeptions import *
-from HeimdallMultiwii_package.HeimdallMultiwii.mspcommands import MSPMessagesEnum
-from HeimdallMultiwii_package.HeimdallMultiwii.multiwii import MultiWii
+from HeimdallMultiwii.exeptions import *
+from HeimdallMultiwii.mspcommands import MSPMessagesEnum
+from HeimdallMultiwii.multiwii import MultiWii
 
 __author__ = "Roger Moreno"
 __copyright__ = "Copyright 2019"
@@ -11,6 +11,7 @@ __version__ = "0.0.1"
 __maintainer__ = "Roger Moreno"
 __email__ = "rgrdevelop@gmail.com"
 __status__ = "Development"
+
 
 class Adapter:
 
