@@ -19,3 +19,11 @@ class ClosedConnectionError(HeimdallError):
 class MissingCodeError(HeimdallError):
     """Raised when no MSP code was especified"""
     pass
+
+class ResponseParserNotImpl(HeimdallError):
+    """Raised when no MSP code was especified"""
+    pass
+
+class MWCMessageNotSupported(HeimdallError):
+    """Raised when no MSP code was especified"""
+    pass

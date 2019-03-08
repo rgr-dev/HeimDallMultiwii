@@ -34,113 +34,119 @@ class Adapter:
             self._is_on = False
 
     def get_ident(self):
-        return self._send_message(MSPMessagesEnum.MSP_IDENT.value)
+        return self._send_request_message(MSPMessagesEnum.MSP_IDENT.value)
 
     def get_status(self):
-        return self._send_message(MSPMessagesEnum.MSP_STATUS.value)
+        return self._send_request_message(MSPMessagesEnum.MSP_STATUS.value)
 
     def get_rawimu(self):
-        return self._send_message(MSPMessagesEnum.MSP_RAW_IMU.value)
+        return self._send_request_message(MSPMessagesEnum.MSP_RAW_IMU.value)
 
     def get_servo(self):
-        return self._send_message(MSPMessagesEnum.MSP_SERVO.value)
+        return self._send_request_message(MSPMessagesEnum.MSP_SERVO.value)
 
     def get_motor(self):
-        return self._send_message(MSPMessagesEnum.MSP_MOTOR.value)
+        return self._send_request_message(MSPMessagesEnum.MSP_MOTOR.value)
 
     def get_rc(self):
-        return self._send_message(MSPMessagesEnum.MSP_RC.value)
+        return self._send_request_message(MSPMessagesEnum.MSP_RC.value)
 
     def get_rawgps(self):
-        return self._send_message(MSPMessagesEnum.MSP_RAW_GPS.value)
+        return self._send_request_message(MSPMessagesEnum.MSP_RAW_GPS.value)
 
     def get_compgps(self):
-        return self._send_message(MSPMessagesEnum.MSP_COMP_GPS.value)
+        return self._send_request_message(MSPMessagesEnum.MSP_COMP_GPS.value)
 
     def get_altitude(self):
-        return self._send_message(MSPMessagesEnum.MSP_ALTITUDE.value)
+        return self._send_request_message(MSPMessagesEnum.MSP_ALTITUDE.value)
 
     def get_attitude(self):
-        return self._send_message(MSPMessagesEnum.MSP_ATTITUDE.value)
+        return self._send_request_message(MSPMessagesEnum.MSP_ATTITUDE.value)
 
     def get_analog(self):
-        return self._send_message(MSPMessagesEnum.MSP_ANALOG.value)
+        return self._send_request_message(MSPMessagesEnum.MSP_ANALOG.value)
 
     def get_rctuning(self):
-        return self._send_message(MSPMessagesEnum.MSP_RC_TUNING.value)
+        return self._send_request_message(MSPMessagesEnum.MSP_RC_TUNING.value)
 
     def get_pid(self):
-        return self._send_message(MSPMessagesEnum.MSP_PID.value)
+        return self._send_request_message(MSPMessagesEnum.MSP_PID.value)
 
     def get_box(self):
-        return self._send_message(MSPMessagesEnum.MSP_BOX.value)
+        return self._send_request_message(MSPMessagesEnum.MSP_BOX.value)
 
     def get_misc(self):
-        return self._send_message(MSPMessagesEnum.MSP_MISC.value)
+        return self._send_request_message(MSPMessagesEnum.MSP_MISC.value)
 
     def get_motorpins(self):
-        return self._send_message(MSPMessagesEnum.MSP_MOTOR_PINS.value)
+        return self._send_request_message(MSPMessagesEnum.MSP_MOTOR_PINS.value)
 
     def get_boxnames(self):
-        return self._send_message(MSPMessagesEnum.MSP_BOXNAMES.value)
+        return self._send_request_message(MSPMessagesEnum.MSP_BOXNAMES.value)
 
     def get_pidnames(self):
-        return self._send_message(MSPMessagesEnum.MSP_PIDNAMES.value)
+        return self._send_request_message(MSPMessagesEnum.MSP_PIDNAMES.value)
 
     def get_wp(self):
-        return self._send_message(MSPMessagesEnum.MSP_WP.value)
+        return self._send_request_message(MSPMessagesEnum.MSP_WP.value)
 
     def get_boxids(self):
-        return self._send_message(MSPMessagesEnum.MSP_BOXIDS.value)
+        return self._send_request_message(MSPMessagesEnum.MSP_BOXIDS.value)
 
     def get_rcrawimu(self):
-        return self._send_message(MSPMessagesEnum.MSP_RC_RAW_IMU.value)
+        return self._send_request_message(MSPMessagesEnum.MSP_RC_RAW_IMU.value)
 
     def get_setrawrc(self):
-        return self._send_message(MSPMessagesEnum.MSP_SET_RAW_RC.value)
+        return self._send_request_message(MSPMessagesEnum.MSP_SET_RAW_RC.value)
 
     def get_setrawgps(self):
-        return self._send_message(MSPMessagesEnum.MSP_SET_RAW_GPS.value)
+        return self._send_request_message(MSPMessagesEnum.MSP_SET_RAW_GPS.value)
 
     def get_setpid(self):
-        return self._send_message(MSPMessagesEnum.MSP_SET_PID.value)
+        return self._send_request_message(MSPMessagesEnum.MSP_SET_PID.value)
 
     def get_setbox(self):
-        return self._send_message(MSPMessagesEnum.MSP_SET_BOX.value)
+        return self._send_request_message(MSPMessagesEnum.MSP_SET_BOX.value)
 
     def get_setrctuning(self):
-        return self._send_message(MSPMessagesEnum.MSP_SET_RC_TUNING.value)
+        return self._send_request_message(MSPMessagesEnum.MSP_SET_RC_TUNING.value)
 
     def get_acccalibration(self):
-        return self._send_message(MSPMessagesEnum.MSP_ACC_CALIBRATION.value)
+        return self._send_request_message(MSPMessagesEnum.MSP_ACC_CALIBRATION.value)
 
     def get_magcalibration(self):
-        return self._send_message(MSPMessagesEnum.MSP_MAG_CALIBRATION.value)
+        return self._send_request_message(MSPMessagesEnum.MSP_MAG_CALIBRATION.value)
 
     def get_setmisc(self):
-        return self._send_message(MSPMessagesEnum.MSP_SET_MISC.value)
+        return self._send_request_message(MSPMessagesEnum.MSP_SET_MISC.value)
 
     def get_resetconf(self):
-        return self._send_message(MSPMessagesEnum.MSP_RESET_CONF.value)
+        return self._send_request_message(MSPMessagesEnum.MSP_RESET_CONF.value)
 
     def get_setwp(self):
-        return self._send_message(MSPMessagesEnum.MSP_SET_WP.value)
+        return self._send_request_message(MSPMessagesEnum.MSP_SET_WP.value)
 
     def get_switchrcserial(self):
-        return self._send_message(MSPMessagesEnum.MSP_SWITCH_RC_SERIAL.value)
+        return self._send_request_message(MSPMessagesEnum.MSP_SWITCH_RC_SERIAL.value)
 
     def get_isserial(self):
-        return self._send_message(MSPMessagesEnum.MSP_IS_SERIAL.value)
+        return self._send_request_message(MSPMessagesEnum.MSP_IS_SERIAL.value)
 
     def get_debug(self):
-        return self._send_message(MSPMessagesEnum.MSP_DEBUG.value)
+        return self._send_request_message(MSPMessagesEnum.MSP_DEBUG.value)
 
-    def _send_message(self, cmd):
+    def _send_request_message(self, cmd):
         if self._is_on:
             msg = self.flightcontrolboard.get_fcb_data(cmd)
             return msg
         else:
             raise ClosedConnectionError("Serial Port not connected!")
+
+    def ACC_calibration(self):
+        self.flightcontrolboard.send_simple_command(205)
+
+    def MAG_calibration(self):
+        self.flightcontrolboard.send_simple_command(206)
 
     def can_fly(self):
         return self._is_on

@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 
-from enum import Enum
+from enum import IntEnum
 
 
-class MSPMessagesEnum(Enum):
+class MSPMessagesEnum(IntEnum):
     MSP_IDENT = 100
     MSP_STATUS = 101
     MSP_RAW_IMU = 102

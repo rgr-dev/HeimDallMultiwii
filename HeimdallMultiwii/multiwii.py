@@ -8,7 +8,18 @@ import struct
 import logging
 
 from HeimdallMultiwii.constants import CTYPE_PATTERNS
-from HeimdallMultiwii.exeptions import MissingCodeError
+from HeimdallMultiwii.exeptions import MissingCodeError, ResponseParserNotImpl, MWCMessageNotSupported
+from HeimdallMultiwii.mspcommands import MSPMessagesEnum
+
+
+def validate_code(f):
+    def __validate_code_wrapper(self, code):
+        codes = list(map(int, MSPMessagesEnum))
+        if code is None or code not in codes:
+            raise MissingCodeError("Please provide message code")
+        return f(self, code)
+
+    return __validate_code_wrapper
 
 
 class MultiWii:
@@ -40,6 +51,7 @@ class MultiWii:
         """Setup and open serial communication with FCB
 
         :param serport: Serial port for multiwii connection
+        :param baud_rate: BaudRate for multiwii connection
         :return: True if connection was successful established
 
         :raise: Exception if any serial port is provided
@@ -88,14 +100,25 @@ class MultiWii:
         # else:
         #     self.logger.info("Connection already closed.")
 
+    @validate_code
+    def send_simple_command(self, code=None):
+        """
+        Send Single commands e.g. for calibrate MAG or ACC
+        No return response
+        :param code:
+        :return: True if Evething is OK
+        """
+        message = self._buildpayload(code)
+        self._sendmessage(message)
+        return True
+
+    @validate_code
     def get_fcb_data(self, code=None):
         """
         Send Request Message to the Multiwii FCB
         :param code: MSP Request
         :return: Miltiwii response dict
         """
-        if code is None:
-            raise MissingCodeError("Please provide message code")
         message = self._buildpayload(code)
         self._sendmessage(message)
         return self._readmessage(code)
@@ -108,13 +131,22 @@ class MultiWii:
         header = tuple(self.serial.read(3))
         datalength = struct.unpack('<b', self.serial.read())[0]
         struct.unpack('<b', self.serial.read())
-        if header == (0x24, 0x4d, 0x3e):
+        if header == (0x24, 0x4d, 0x3e) and 0x21 not in header:
             data = self.serial.read(datalength)
-            fmt = CTYPE_PATTERNS[code]
+            try:
+                fmt = CTYPE_PATTERNS[code]
+            except KeyError:
+                self._flush()
+                raise ResponseParserNotImpl('El mensaje no puede ser parseado')
+            if fmt == 'PENDING':
+                self._flush()
+                raise ResponseParserNotImpl('El mensaje no puede ser parseado')
             msg = struct.unpack('<' + fmt, data)
             # self.logger.info(msg)
             self._flush()
             return self._process_message(code, msg)
+        elif 0x21 in header:
+            raise MWCMessageNotSupported("The board can't response the message {0}".format(code))
 
     def _flush(self):
         self.serial.flushInput()

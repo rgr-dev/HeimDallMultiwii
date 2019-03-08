@@ -118,4 +118,6 @@ dmypy.json
 # JetBrains Files
 .idea/
 
+# tests
+tests/
 test.py
