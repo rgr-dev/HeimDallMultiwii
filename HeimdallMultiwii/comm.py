@@ -111,12 +111,6 @@ class Adapter:
     def get_setrctuning(self):
         return self._send_request_message(MSPMessagesEnum.MSP_SET_RC_TUNING.value)
 
-    def get_acccalibration(self):
-        return self._send_request_message(MSPMessagesEnum.MSP_ACC_CALIBRATION.value)
-
-    def get_magcalibration(self):
-        return self._send_request_message(MSPMessagesEnum.MSP_MAG_CALIBRATION.value)
-
     def get_setmisc(self):
         return self._send_request_message(MSPMessagesEnum.MSP_SET_MISC.value)
 
@@ -143,10 +137,10 @@ class Adapter:
             raise ClosedConnectionError("Serial Port not connected!")
 
     def ACC_calibration(self):
-        self.flightcontrolboard.send_simple_command(205)
+        self.flightcontrolboard.send_simple_command(MSPMessagesEnum.MSP_ACC_CALIBRATION.value)
 
     def MAG_calibration(self):
-        self.flightcontrolboard.send_simple_command(206)
+        self.flightcontrolboard.send_simple_command(MSPMessagesEnum.MSP_MAG_CALIBRATION.value)
 
     def can_fly(self):
         return self._is_on

@@ -8,7 +8,7 @@ CTYPE_PATTERNS = {
     103: 'HHHHHHHH',
     104: 'HHHHHHHH',
     105: 'HHHHHHHH',
-    106: 'BBIIHHH',
+    106: 'BBiiHHH',
     107: 'HHB',
     108: 'hhh',
     109: 'ih',
@@ -20,7 +20,7 @@ CTYPE_PATTERNS = {
     115: 'BBBBBBBB',
     116: 'PENDING',
     117: 'PENDING',
-    118: 'BIIIHHB',
+    118: 'BiiiHHB',
     119: 'BBBBBBBBB',
     120: 'HHHBHHHBHHHBHHHBHHHBHHHBHHHBHHHB'
 }
