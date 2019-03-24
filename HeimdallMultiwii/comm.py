@@ -52,7 +52,10 @@ class Adapter:
         return self._send_request_message(MSPMessagesEnum.MSP_RC.value)
 
     def get_rawgps(self):
-        return self._send_request_message(MSPMessagesEnum.MSP_RAW_GPS.value)
+        gps_data = self._send_request_message(MSPMessagesEnum.MSP_RAW_GPS.value)
+        gps_data['GPS_coord[LAT]'] = gps_data['GPS_coord[LAT]'] / 10000000
+        gps_data['GPS_coord[LON]'] = gps_data['GPS_coord[LON]'] / 10000000
+        return gps_data
 
     def get_compgps(self):
         return self._send_request_message(MSPMessagesEnum.MSP_COMP_GPS.value)
