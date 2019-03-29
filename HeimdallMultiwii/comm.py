@@ -3,6 +3,8 @@ from HeimdallMultiwii.exeptions import *
 from HeimdallMultiwii.mspcommands import MSPMessagesEnum
 from HeimdallMultiwii.multiwii import MultiWii
 
+from math import radians, atanh, degrees, radians
+
 __author__ = "Roger Moreno"
 __copyright__ = "Copyright 2019"
 __credits__ = ["Roger Moreno", ""]
@@ -64,7 +66,10 @@ class Adapter:
         return self._send_request_message(MSPMessagesEnum.MSP_ALTITUDE.value)
 
     def get_attitude(self):
-        return self._send_request_message(MSPMessagesEnum.MSP_ATTITUDE.value)
+        attitude_data = self._send_request_message(MSPMessagesEnum.MSP_ATTITUDE.value)
+        fixed_angx = self.__fix_angx(attitude_data['angx'])
+        attitude_data['angx'] = fixed_angx
+        return attitude_data
 
     def get_analog(self):
         return self._send_request_message(MSPMessagesEnum.MSP_ANALOG.value)
@@ -144,6 +149,14 @@ class Adapter:
 
     def MAG_calibration(self):
         self.flightcontrolboard.send_simple_command(MSPMessagesEnum.MSP_MAG_CALIBRATION.value)
+
+    def __fix_angx(self, angx):
+        if angx < 0:
+            return (angx / 10) + 360
+        elif angx == 0:
+            return angx
+        else:
+            return angx / 10
 
     def can_fly(self):
         return self._is_on
