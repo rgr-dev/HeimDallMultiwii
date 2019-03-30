@@ -3,7 +3,7 @@ from HeimdallMultiwii.exeptions import *
 from HeimdallMultiwii.mspcommands import MSPMessagesEnum
 from HeimdallMultiwii.multiwii import MultiWii
 
-from math import radians, atanh, degrees, radians
+from math import degrees, atan2
 
 __author__ = "Roger Moreno"
 __copyright__ = "Copyright 2019"
@@ -16,6 +16,7 @@ __status__ = "Development"
 
 
 class Adapter:
+    HMC5883_SCALE = 0.92
 
     def __init__(self, port, baudrate=115200):
         self.flightcontrolboard = MultiWii()
@@ -42,7 +43,12 @@ class Adapter:
         return self._send_request_message(MSPMessagesEnum.MSP_STATUS.value)
 
     def get_rawimu(self):
-        return self._send_request_message(MSPMessagesEnum.MSP_RAW_IMU.value)
+        raw_imu = self._send_request_message(MSPMessagesEnum.MSP_RAW_IMU.value)
+        magx = raw_imu['magx']
+        magy = raw_imu['magy']
+        compass_degrees = self.__get_compass_degrees(magx, magy)
+        raw_imu['compass_degrees'] = compass_degrees
+        return raw_imu
 
     def get_servo(self):
         return self._send_request_message(MSPMessagesEnum.MSP_SERVO.value)
@@ -55,8 +61,10 @@ class Adapter:
 
     def get_rawgps(self):
         gps_data = self._send_request_message(MSPMessagesEnum.MSP_RAW_GPS.value)
-        gps_data['GPS_coord[LAT]'] = gps_data['GPS_coord[LAT]'] / 10000000
-        gps_data['GPS_coord[LON]'] = gps_data['GPS_coord[LON]'] / 10000000
+        latitude_fixed = gps_data['GPS_coord[LAT]']
+        longitude_fixed = gps_data['GPS_coord[LON]']
+        gps_data['GPS_coord[LAT]'] = latitude_fixed / 10000000
+        gps_data['GPS_coord[LON]'] = longitude_fixed / 10000000
         return gps_data
 
     def get_compgps(self):
@@ -150,6 +158,9 @@ class Adapter:
     def MAG_calibration(self):
         self.flightcontrolboard.send_simple_command(MSPMessagesEnum.MSP_MAG_CALIBRATION.value)
 
+    def can_fly(self):
+        return self._is_on
+
     def __fix_angx(self, angx):
         if angx < 0:
             return (angx / 10) + 360
@@ -158,5 +169,8 @@ class Adapter:
         else:
             return angx / 10
 
-    def can_fly(self):
-        return self._is_on
+    def __get_compass_degrees(self, magx, magy):
+        scaled_x = magx * self.HMC5883_SCALE
+        scales_y = magy * self.HMC5883_SCALE
+        result_radians = atan2(scaled_x, scales_y)
+        return degrees(result_radians)
