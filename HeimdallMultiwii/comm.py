@@ -3,13 +3,13 @@ from HeimdallMultiwii.exeptions import *
 from HeimdallMultiwii.mspcommands import MSPMessagesEnum
 from HeimdallMultiwii.multiwii import MultiWii
 
-from math import degrees, atan2
+from math import degrees, atan2, radians
 
 __author__ = "Roger Moreno"
 __copyright__ = "Copyright 2019"
 __credits__ = ["Roger Moreno", ""]
 __license__ = "MIT"
-__version__ = "0.0.1"
+__version__ = "1.1.11.dev1"
 __maintainer__ = "Roger Moreno"
 __email__ = "rgrdevelop@gmail.com"
 __status__ = "Development"
@@ -46,7 +46,7 @@ class Adapter:
         raw_imu = self._send_request_message(MSPMessagesEnum.MSP_RAW_IMU.value)
         magx = raw_imu['magx']
         magy = raw_imu['magy']
-        compass_degrees = self.__get_compass_degrees(magx, magy)
+        compass_degrees = self.__get_compass_fixed(magx, magy)
         raw_imu['compass_degrees'] = compass_degrees
         return raw_imu
 
@@ -169,8 +169,9 @@ class Adapter:
         else:
             return angx / 10
 
-    def __get_compass_degrees(self, magx, magy):
+    def __get_compass_fixed(self, magx, magy):
         scaled_x = magx * self.HMC5883_SCALE
         scales_y = magy * self.HMC5883_SCALE
         result_radians = atan2(scaled_x, scales_y)
-        return degrees(result_radians)
+        opisite_degrees = -degrees(result_radians)
+        return radians(opisite_degrees % 360)
