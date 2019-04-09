@@ -9,7 +9,7 @@ __author__ = "Roger Moreno"
 __copyright__ = "Copyright 2019"
 __credits__ = ["Roger Moreno", ""]
 __license__ = "MIT"
-__version__ = "1.1.11.dev1"
+__version__ = "1.1.12.dev1"
 __maintainer__ = "Roger Moreno"
 __email__ = "rgrdevelop@gmail.com"
 __status__ = "Development"
@@ -163,15 +163,18 @@ class Adapter:
 
     def __fix_angx(self, angx):
         if angx < 0:
-            return (angx / 10) + 360
+            return self.__parse_to_clockwise((angx / 10) + 360)
         elif angx == 0:
             return angx
         else:
-            return angx / 10
+            return self.__parse_to_clockwise(angx / 10)
 
     def __get_compass_fixed(self, magx, magy):
         scaled_x = magx * self.HMC5883_SCALE
         scales_y = magy * self.HMC5883_SCALE
         result_radians = atan2(scaled_x, scales_y)
-        opisite_degrees = -degrees(result_radians)
+        return self.__parse_to_clockwise(degrees(result_radians))
+
+    def __parse_to_clockwise(self, degr):
+        opisite_degrees = -degr
         return radians(opisite_degrees % 360)
