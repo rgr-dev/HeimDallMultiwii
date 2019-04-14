@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 from ast import literal_eval
-from time import sleep
+import time
 import serial as pyserial
 import struct
 
@@ -81,7 +81,7 @@ class MultiWii:
             print("Connecting with board on port: " + self.serial.port)
             for i in range(1, wait):
                 # self.logger.info(wait - i)
-                sleep(1)
+                time.sleep(1)
         except Exception as error:
             # self.logger.warning("Error opening " + self.serial.port + " port. " + str(error))
             return False
@@ -170,6 +170,28 @@ class MultiWii:
         template = _MessagesFormats.TEMPLATES[code]
         msglist= list(zip(template, message))
         return dict(msglist)
+
+    def arm(self):
+        timer = 0
+        start = time.time()
+        while timer < 0.5:
+            data = [1500, 1500, 2000, 1000]
+            message = self._buildpayload(MSPMessagesEnum.MSP_SET_RAW_RC.value, 8, data)
+            self._sendmessage(message)
+            time.sleep(0.05)
+            timer = timer + (time.time() - start)
+            start = time.time()
+
+    def disarm(self):
+        timer = 0
+        start = time.time()
+        while timer < 0.5:
+            data = [1500, 1500, 1000, 1000]
+            message = self._buildpayload(MSPMessagesEnum.MSP_SET_RAW_RC.value, 8, data)
+            self._sendmessage(message)
+            time.sleep(0.05)
+            timer = timer + (time.time() - start)
+            start = time.time()
 
 
 class _MessagesFormats:

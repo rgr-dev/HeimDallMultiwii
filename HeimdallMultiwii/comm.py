@@ -158,6 +158,12 @@ class Adapter:
     def MAG_calibration(self):
         self.flightcontrolboard.send_simple_command(MSPMessagesEnum.MSP_MAG_CALIBRATION.value)
 
+    def drone_ARM(self):
+        self.flightcontrolboard.arm()
+
+    def drone_DISARM(self):
+        self.flightcontrolboard.disarm()
+
     def can_fly(self):
         return self._is_on
 
