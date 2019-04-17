@@ -5,8 +5,6 @@ import time
 import serial as pyserial
 import struct
 
-import logging
-
 from HeimdallMultiwii.constants import CTYPE_PATTERNS
 from HeimdallMultiwii.exeptions import MissingCodeError, ResponseParserNotImpl, MWCMessageNotSupported
 from HeimdallMultiwii.mspcommands import MSPMessagesEnum
@@ -121,36 +119,41 @@ class MultiWii:
         """
         message = self._buildpayload(code)
         self._sendmessage(message)
-        return self._readmessage(code)
+        return self.readmessage(code)
 
     def _sendmessage(self, message):
         self.serial.write(message)
-        #sleep(0.05)
+        self.serial.flushOutput()
 
-    def _readmessage(self, code):
-        header = tuple(self.serial.read(3))
-        datalength = struct.unpack('<b', self.serial.read())[0]
-        struct.unpack('<b', self.serial.read())
-        if header == (0x24, 0x4d, 0x3e) and 0x21 not in header:
-            data = self.serial.read(datalength)
+    def readmessage(self, code):
+        data = self.__extract_data(code)
+        if data:
             try:
                 fmt = CTYPE_PATTERNS[code]
             except KeyError:
-                self._flush()
+                self.serial.flushInput()
                 raise ResponseParserNotImpl('El mensaje no puede ser parseado')
             if fmt == 'PENDING':
-                self._flush()
+                self.serial.flushInput()
                 raise ResponseParserNotImpl('El mensaje no puede ser parseado')
             msg = struct.unpack('<' + fmt, data)
-            # self.logger.info(msg)
-            self._flush()
+            self.serial.flushInput()
             return self._process_message(code, msg)
+
+    def __extract_data(self, code):
+        header = tuple(self.serial.read(3))
+        datalength = struct.unpack('<b', self.serial.read())[0]
+        struct.unpack('<b', self.serial.read())
+        data = b''
+        if header == (0x24, 0x4d, 0x3e) and 0x21 not in header:
+            data = self.serial.read(datalength)
         elif 0x21 in header:
             raise MWCMessageNotSupported("The board can't response the message {0}".format(code))
+        return data
 
-    def _flush(self):
-        self.serial.flushInput()
-        self.serial.flushOutput()
+    # def _flush(self):
+    #     self.serial.flushInput()
+    #     self.serial.flushOutput()
 
     def _buildpayload(self, code: int, size: int = 0, data: list = []):
         payload = bytes()
@@ -178,6 +181,7 @@ class MultiWii:
             data = [1500, 1500, 2000, 1000]
             message = self._buildpayload(MSPMessagesEnum.MSP_SET_RAW_RC.value, 8, data)
             self._sendmessage(message)
+            self.serial.flushOutput()
             time.sleep(0.05)
             timer = timer + (time.time() - start)
             start = time.time()
@@ -189,9 +193,15 @@ class MultiWii:
             data = [1500, 1500, 1000, 1000]
             message = self._buildpayload(MSPMessagesEnum.MSP_SET_RAW_RC.value, 8, data)
             self._sendmessage(message)
+            self.serial.flushOutput()
             time.sleep(0.05)
             timer = timer + (time.time() - start)
             start = time.time()
+
+    def send_rc_signal(self, data):
+        message = self._buildpayload(MSPMessagesEnum.MSP_SET_RAW_RC.value, 8, data)
+        self._sendmessage(message)
+        self.serial.flushOutput()
 
 
 class _MessagesFormats:
@@ -199,7 +209,7 @@ class _MessagesFormats:
     TEMPLATES = {
         100: ('VERSION', 'MULTITYPE', 'MSP_VERSION', 'capability'),
         101: ('cycleTime', 'i2c_errors_count', 'sensor', 'flag', 'global_conf.currentSet'),
-        102: ('accx', 'accy', 'accz', 'gyrx', 'gyry', 'gyrz', 'magx', 'magy', 'magz'),
+        102: ('accx', 'accy', 'accz', 'gyrx', 'gyry', 'gyrz', 'magx', 'magy', 'magz', 'GPS_coord[LAT]', 'GPS_coord[LON]', 'GPS_altitude'),
         103: ('servo1', 'servo2', 'servo3', 'servo4', 'servo5', 'servo6', 'servo7', 'servo8'),
         104: ('motor1', 'motor2', 'motor3', 'motor4', 'motor5', 'motor6', 'motor7', 'motor8'),
         105: ('roll', 'pitch', 'yaw', 'throttle', 'AUX1', 'AUX2', 'AUX3AUX4'),
