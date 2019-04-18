@@ -38,7 +38,7 @@ class MultiWii:
     """
 
     def __init__(self) -> None:
-        self.serial = pyserial.Serial(timeout=0)
+        self.serial = pyserial.Serial(timeout=1)
         # self.logger = logging.getLogger('simpleExample')
 
     def __del__(self):
@@ -141,15 +141,18 @@ class MultiWii:
             return self._process_message(code, msg)
 
     def __extract_data(self, code):
-        header = tuple(self.serial.read(3))
-        datalength = struct.unpack('<b', self.serial.read())[0]
-        struct.unpack('<b', self.serial.read())
         data = b''
-        if header == (0x24, 0x4d, 0x3e) and 0x21 not in header:
-            data = self.serial.read(datalength)
-        elif 0x21 in header:
-            raise MWCMessageNotSupported("The board can't response the message {0}".format(code))
-        return data
+        try:
+            header = tuple(self.serial.read(3))
+            datalength = struct.unpack('<b', self.serial.read())[0]
+            struct.unpack('<b', self.serial.read())
+            if header == (0x24, 0x4d, 0x3e) and 0x21 not in header:
+                data = self.serial.read(datalength)
+            elif 0x21 in header:
+                raise MWCMessageNotSupported("The board can't response the message {0}".format(code))
+            return data
+        except struct.error:
+            return data
 
     # def _flush(self):
     #     self.serial.flushInput()
