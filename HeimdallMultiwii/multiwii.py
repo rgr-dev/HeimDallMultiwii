@@ -38,7 +38,7 @@ class MultiWii:
     """
 
     def __init__(self) -> None:
-        self.serial = pyserial.Serial()
+        self.serial = pyserial.Serial(timeout=0)
         # self.logger = logging.getLogger('simpleExample')
 
     def __del__(self):
