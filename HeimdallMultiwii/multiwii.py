@@ -151,7 +151,7 @@ class MultiWii:
             elif 0x21 in header:
                 raise MWCMessageNotSupported("The board can't response the message {0}".format(code))
             return data
-        except struct.error:
+        except (pyserial.serialutil.SerialException, struct.error):
             return data
 
     # def _flush(self):

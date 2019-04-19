@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="HeimdallMultiwii",
-    version="1.1.19.dev1",
+    version="1.1.20.dev1",
     author="Roger Moreno",
     author_email="rgrdevelop@gmail.com",
     description="Adapter for FCB Multiwii communications",
