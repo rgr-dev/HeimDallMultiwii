@@ -4,7 +4,8 @@
 CTYPE_PATTERNS = {
     100: 'BBBI',
     101: 'HHHIB',
-    102: 'hhhhhhhhh',
+    # 102: 'hhhhhhhhh',
+    102: 'hhhhhhhhhiiH',
     103: 'HHHHHHHH',
     104: 'HHHHHHHH',
     105: 'HHHHHHHH',
