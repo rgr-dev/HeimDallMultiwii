@@ -9,7 +9,7 @@ __author__ = "Roger Moreno"
 __copyright__ = "Copyright 2019"
 __credits__ = ["Roger Moreno", ""]
 __license__ = "MIT"
-__version__ = "1.1.12.dev1"
+__version__ = "1.1.16.dev1"
 __maintainer__ = "Roger Moreno"
 __email__ = "rgrdevelop@gmail.com"
 __status__ = "Development"
@@ -48,7 +48,17 @@ class Adapter:
         magy = raw_imu['magy']
         compass_degrees = self.__get_compass_fixed(magx, magy)
         raw_imu['compass_degrees'] = compass_degrees
+        self.__fix_coordinates(raw_imu)
+        fixed_angx = self.__fix_angx(raw_imu['accx'])
+        raw_imu['accx'] = fixed_angx
         return raw_imu
+
+    def get_original_rawimu(self):
+        """
+        Raw IMU without changes
+        :return: RawIMU message without parse any metrics
+        """
+        return self._send_request_message(MSPMessagesEnum.MSP_RAW_IMU.value)
 
     def get_servo(self):
         return self._send_request_message(MSPMessagesEnum.MSP_SERVO.value)
@@ -61,10 +71,7 @@ class Adapter:
 
     def get_rawgps(self):
         gps_data = self._send_request_message(MSPMessagesEnum.MSP_RAW_GPS.value)
-        latitude_fixed = gps_data['GPS_coord[LAT]']
-        longitude_fixed = gps_data['GPS_coord[LON]']
-        gps_data['GPS_coord[LAT]'] = latitude_fixed / 10000000
-        gps_data['GPS_coord[LON]'] = longitude_fixed / 10000000
+        self.__fix_coordinates(gps_data)
         return gps_data
 
     def get_compgps(self):
@@ -78,6 +85,9 @@ class Adapter:
         fixed_angx = self.__fix_angx(attitude_data['angx'])
         attitude_data['angx'] = fixed_angx
         return attitude_data
+
+    def get_original_attitude(self):
+        return self._send_request_message(MSPMessagesEnum.MSP_ATTITUDE.value)
 
     def get_analog(self):
         return self._send_request_message(MSPMessagesEnum.MSP_ANALOG.value)
@@ -158,8 +168,26 @@ class Adapter:
     def MAG_calibration(self):
         self.flightcontrolboard.send_simple_command(MSPMessagesEnum.MSP_MAG_CALIBRATION.value)
 
+    def drone_ARM(self):
+        self.flightcontrolboard.arm()
+
+    def drone_DISARM(self):
+        self.flightcontrolboard.disarm()
+
+    def send_rc_signal(self, data):
+        self.flightcontrolboard.send_rc_signal(data)
+
     def can_fly(self):
         return self._is_on
+
+    def listen_message(self):
+        return self.flightcontrolboard.readmessage(MSPMessagesEnum.MSP_RAW_IMU.value)
+
+    def __fix_coordinates(self, data):
+        latitude_fixed = data['GPS_coord[LAT]']
+        longitude_fixed = data['GPS_coord[LON]']
+        data['GPS_coord[LAT]'] = latitude_fixed / 10000000
+        data['GPS_coord[LON]'] = longitude_fixed / 10000000
 
     def __fix_angx(self, angx):
         if angx < 0:
