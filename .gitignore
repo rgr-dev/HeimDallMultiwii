@@ -119,5 +119,4 @@ dmypy.json
 .idea/
 
 # tests
-tests/
 test.py

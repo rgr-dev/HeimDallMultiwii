@@ -53,6 +53,13 @@ class Adapter:
         raw_imu['accx'] = fixed_angx
         return raw_imu
 
+    def get_original_rawimu(self):
+        """
+        Raw IMU without changes
+        :return: RawIMU message without parse any metrics
+        """
+        return self._send_request_message(MSPMessagesEnum.MSP_RAW_IMU.value)
+
     def get_servo(self):
         return self._send_request_message(MSPMessagesEnum.MSP_SERVO.value)
 
@@ -78,6 +85,9 @@ class Adapter:
         fixed_angx = self.__fix_angx(attitude_data['angx'])
         attitude_data['angx'] = fixed_angx
         return attitude_data
+
+    def get_original_attitude(self):
+        return self._send_request_message(MSPMessagesEnum.MSP_ATTITUDE.value)
 
     def get_analog(self):
         return self._send_request_message(MSPMessagesEnum.MSP_ANALOG.value)
