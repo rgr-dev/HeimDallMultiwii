@@ -149,6 +149,7 @@ class MultiWii:
             if header == (0x24, 0x4d, 0x3e) and 0x21 not in header:
                 data = self.serial.read(datalength)
             elif 0x21 in header:
+                self.serial.flushInput()
                 raise MWCMessageNotSupported("The board can't response the message {0}".format(code))
             return data
         except (pyserial.serialutil.SerialException, struct.error):
