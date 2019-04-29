@@ -32,7 +32,7 @@ class Adapter:
 
     def disconnect(self):
         if self._is_on:
-            # self.flightcontrolboard.disarm()    # TODO: Pending
+            self.drone_DISARM()
             self.flightcontrolboard.close_connection()
             self._is_on = False
 
@@ -44,6 +44,8 @@ class Adapter:
 
     def get_rawimu(self):
         raw_imu = self._send_request_message(MSPMessagesEnum.MSP_RAW_IMU.value)
+        if raw_imu is None:
+            return ''
         magx = raw_imu['magx']
         magy = raw_imu['magy']
         compass_degrees = self.__get_compass_fixed(magx, magy)
