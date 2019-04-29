@@ -44,16 +44,7 @@ class Adapter:
 
     def get_rawimu(self):
         raw_imu = self._send_request_message(MSPMessagesEnum.MSP_RAW_IMU.value)
-        if raw_imu is None:
-            return ''
-        magx = raw_imu['magx']
-        magy = raw_imu['magy']
-        compass_degrees = self.__get_compass_fixed(magx, magy)
-        raw_imu['compass_degrees'] = compass_degrees
-        self.__fix_coordinates(raw_imu)
-        fixed_angx = self.__fix_angx(raw_imu['accx'])
-        raw_imu['accx'] = fixed_angx
-        return raw_imu
+        return self.__process_raw_imu_message(raw_imu)
 
     def get_original_rawimu(self):
         """
@@ -183,7 +174,21 @@ class Adapter:
         return self._is_on
 
     def listen_message(self):
-        return self.flightcontrolboard.readmessage(MSPMessagesEnum.MSP_RAW_IMU.value)
+        msg = self.flightcontrolboard.readmessage(MSPMessagesEnum.MSP_RAW_IMU.value)
+        return self.__process_raw_imu_message(msg)
+
+    def __process_raw_imu_message(self, raw_imu_msg):
+        raw_imu = raw_imu_msg
+        if raw_imu is None:
+            return ''
+        magx = raw_imu['magx']
+        magy = raw_imu['magy']
+        compass_degrees = self.__get_compass_fixed(magx, magy)
+        raw_imu['compass_degrees'] = compass_degrees
+        self.__fix_coordinates(raw_imu)
+        fixed_angx = self.__fix_angx(raw_imu['accx'])
+        raw_imu['accx'] = fixed_angx
+        return raw_imu
 
     def __fix_coordinates(self, data):
         latitude_fixed = data['GPS_coord[LAT]']
