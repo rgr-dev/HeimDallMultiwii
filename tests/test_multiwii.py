@@ -24,7 +24,7 @@ class TestMultiwii(unittest.TestCase):
                          list(result.keys()))
 
     def test_send_single_command(self):
-        self.assertTrue(self._multiwii.send_simple_command(205))
+        self.assertTrue(self._multiwii.send_simple_command(5,205))
 
    # def test_send_command_with_data(self):
 

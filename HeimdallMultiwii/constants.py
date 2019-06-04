@@ -15,7 +15,7 @@ CTYPE_PATTERNS = {
     109: 'ih',
     110: 'BHHH',
     111: 'BBBBBBB',
-    112: 'BBBBBBBBBBBBBBBBBBBBBBBBBBBBBB',
+    112: 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb',
     113: 'PENDING',
     114: 'HHHHHHIHBBBB',
     115: 'BBBBBBBB',

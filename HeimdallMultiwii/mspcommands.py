@@ -38,3 +38,4 @@ class MSPMessagesEnum(IntEnum):
     MSP_SWITCH_RC_SERIAL = 210
     MSP_IS_SERIAL = 211
     MSP_DEBUG = 254
+    MSP_EEPROM_WRITE = 250

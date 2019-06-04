@@ -98,16 +98,18 @@ class MultiWii:
         # else:
         #     self.logger.info("Connection already closed.")
 
-    @validate_code
-    def send_simple_command(self, code=None):
+    def send_simple_command(self, wait, code=None):
         """
         Send Single commands e.g. for calibrate MAG or ACC
         No return response
-        :param code:
+        :param code: MSP message code
+        :param wait: Time to sleep
         :return: True if Evething is OK
         """
         message = self._buildpayload(code)
         self._sendmessage(message)
+        time.sleep(wait)
+        self.serial.flushInput()
         return True
 
     @validate_code
@@ -162,7 +164,10 @@ class MultiWii:
     def _buildpayload(self, code: int, size: int = 0, data: list = []):
         payload = bytes()
         total_data = [ord('$'), ord('M'), ord('<'), size, code] + data
-        payload += struct.pack('<3bBB%dH' % len(data), *total_data)
+        if code == MSPMessagesEnum.MSP_SET_PID.value:
+            payload += struct.pack('<3bBB%db' % len(data), *total_data)
+        else:
+            payload += struct.pack('<3bBB%dh' % len(data), *total_data)
         data = payload[3:]
         checksum = code
         if len(data) > 0x02:  # cambiar 0x02 a ord(2)
@@ -175,6 +180,9 @@ class MultiWii:
     def _process_message(self, code, msg):
         message = literal_eval(str(msg))
         template = _MessagesFormats.TEMPLATES[code]
+        #  If any teamplate available, return raw message
+        if len(template) == 0:
+            return msg
         msglist= list(zip(template, message))
         return dict(msglist)
 
@@ -203,9 +211,17 @@ class MultiWii:
             start = time.time()
 
     def send_rc_signal(self, data):
-        message = self._buildpayload(MSPMessagesEnum.MSP_SET_RAW_RC.value, 8, data)
+        code = MSPMessagesEnum.MSP_SET_RAW_RC.value
+        self.only_send_message(code, 8, data)
+
+    def set_pid(self, data):
+        code = MSPMessagesEnum.MSP_SET_PID.value
+        self.only_send_message(code, 30, data)
+        self.serial.flushInput()
+
+    def only_send_message(self, code, size, data):
+        message = self._buildpayload(code, size, data)
         self._sendmessage(message)
-        self.serial.flushOutput()
 
 
 class _MessagesFormats:

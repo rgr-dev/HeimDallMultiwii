@@ -3,6 +3,7 @@ from HeimdallMultiwii.exeptions import *
 from HeimdallMultiwii.mspcommands import MSPMessagesEnum
 from HeimdallMultiwii.multiwii import MultiWii
 
+import time
 from math import degrees, atan2, radians
 
 __author__ = "Roger Moreno"
@@ -155,11 +156,14 @@ class Adapter:
         else:
             raise ClosedConnectionError("Serial Port not connected!")
 
+    def eeprom_write(self):
+        self.flightcontrolboard.send_simple_command(2, MSPMessagesEnum.MSP_EEPROM_WRITE.value)
+
     def ACC_calibration(self):
-        self.flightcontrolboard.send_simple_command(MSPMessagesEnum.MSP_ACC_CALIBRATION.value)
+        self.flightcontrolboard.send_simple_command(10, MSPMessagesEnum.MSP_ACC_CALIBRATION.value)
 
     def MAG_calibration(self):
-        self.flightcontrolboard.send_simple_command(MSPMessagesEnum.MSP_MAG_CALIBRATION.value)
+        self.flightcontrolboard.send_simple_command(30, MSPMessagesEnum.MSP_MAG_CALIBRATION.value)
 
     def drone_ARM(self):
         self.flightcontrolboard.arm()
@@ -169,6 +173,10 @@ class Adapter:
 
     def send_rc_signal(self, data):
         self.flightcontrolboard.send_rc_signal(data)
+
+    def set_pid(self, data):
+        self.flightcontrolboard.set_pid(data)
+        self.eeprom_write()
 
     def can_fly(self):
         return self._is_on
